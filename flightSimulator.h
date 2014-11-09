@@ -92,6 +92,19 @@ namespace octet {
 			}
 		}
 
+
+		/// Sound - Aluint declaration
+		ALuint carStart;
+		ALuint carFowards;
+		ALuint carUP;
+		unsigned cur_source;
+		ALuint sources[3];
+
+		ALuint get_sound_source() { return sources[cur_source++ % 3]; }
+		
+
+
+		
 		/// Sky Box
 		scene_node *skyDome;
 
@@ -137,15 +150,28 @@ namespace octet {
 			//camera_node->translate(vec3(0, 50, 50));      /// (0, 50, 50)
 			//camera_node->rotate(-40.0f, vec3(1, 0, 0));   /// (1, 0, 0)
 
-			//////////////////////////////// Ground
+			//////////////////////////////// Audio
+			carStart = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "assets/flightSimAsset/bang.wav");
+			cur_source = 0;
+			alGenSources(1, sources);
+
+			carFowards = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "assets/flightSimAsset/carStart.wav");
+			cur_source = 0;
+			alGenSources(2, sources);
+
+			carUP = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "assets/flightSimAsset/carUp.wav");
+			cur_source = 0;
+			alGenSources(3, sources);
+
+			//////////////////////////////// Ground main block
 			mat4t mat;
 			mat.rotateY(90);
 			mat.translate(0, -1, 0);
 			material *floor_mat = new material(vec4(1, 0, 1, 1));
 			image *sabImage = new image("assets/flightSimAsset/base_01.gif");
 			material *sabMat = new material(sabImage);
-			add_shape(mat, new mesh_box(vec3(600.0f, 0.5f, 400.0f)), sabMat, false);   /// reset this paprameters to go back 
-			/// to the origin150.0f, 0.5f, 100.0
+			add_shape(mat, new mesh_box(vec3(600.0f, 0.5f, 400.0f)), sabMat, false);    /// reset this paprameters to go back 
+																						/// to the origin150.0f, 0.5f, 100.0
 
 			/*************************************************************************************
 			***************** THIS IS THE COLLADA CODE THAT KILLED MY PROJECT! *******************
@@ -236,20 +262,25 @@ namespace octet {
 			image *yImage = new image("assets/flightSimAsset/yellow.gif");
 			material *yMat = new material(yImage);
 
+			image *carImage = new image("assets/flightSimAsset/carTxt.gif");
+			material *carMat = new material(carImage);
+
+			image *roadSiImage = new image("assets/flightSimAsset/roadSign.gif");
+			material *roadSiMat = new material(roadSiImage);
+
 			//////////////////////////////// flyingCar 
 			mat.loadIdentity();
 			mat.translate(-60, 0, 930);
-			add_shape(mat, new mesh_box(vec3(15.0f, 3.0f, 25.0f)), red, true);
+			add_shape(mat, new mesh_box(vec3(15.0f, 5.0f, 25.0f)), carMat, true);
 
-			//////////////////////////////// dynamic blocks	
-			/// road obstacles 
+			//////////////////////////////// road obstacles 
 			mat.loadIdentity();
 			mat.translate(-30, 4, 870);
 			mat.rotateX(90);
 			for (int i = 0; i != 10; ++i){
 				if (i != 0){
 					mat.translate(7, -50, 0);
-					add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 2)), yMat, true);
+					add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 2)), roadSiMat, true);
 				}
 			}
 
@@ -259,22 +290,21 @@ namespace octet {
 			for (int i = 0; i != 10; ++i){
 				if (i != 0){
 					mat.translate(7, -50, 0);
-					add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 2)), yMat, true);
+					add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 2)), roadSiMat, true);
 				}
 			}
 
 			mat.loadIdentity();
-			mat.translate(-30, 4, 870);
+			mat.translate(-30, 4, 400);
 			mat.rotateX(90);
 			for (int i = 0; i != 10; ++i){
 				if (i != 0){
-					mat.translate(7, -50, 0);
-					add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 2)), yMat, true);
+					mat.translate(-10, -50, 0);
+					add_shape(mat, new mesh_cylinder(zcylinder(vec3(0, 0, 0), 1, 2)), roadSiMat, true);
 				}
 			}
 
-
-
+			//////////////////////////////// dynamic trees	
 			/// dynamic trees left row
 			mat.loadIdentity();
 			mat.translate(-110, 4, 970);
@@ -378,7 +408,7 @@ namespace octet {
 			}
 
 
-			//////////////////////////////// static blocks
+			//////////////////////////////// Ground surrounding blocks
 
 			/// front front front blocks
 			mat.loadIdentity();
@@ -494,18 +524,43 @@ namespace octet {
 				nodes[i]->access_nodeToParent() = modelToWorld;
 			}
 
-			//////////////////////////////// futureCar CTRL ////////////////////////////////
+			/*ALuint source = get_sound_source();
+			alSourcei(source, AL_BUFFER, carStart);
+			alSourcePlay(source);*/
+
+			ALuint source = get_sound_source();
+			alSourcei(source, AL_BUFFER, carStart);
+			alSourcei(source, AL_LOOPING, 1);
+			alSourcePlay(source);
+
+			//////////////////////////////// Car CTRL ////////////////////////////////
 			if (is_key_down(key_up)){
 				rigid_bodies[1]->applyCentralImpulse(btVector3(0.0f, 0.7f, 0.0f));
+				alSourceStop(source);
+				ALuint source = get_sound_source();
+				alSourcei(source, AL_BUFFER, carUP);
+				alSourcePlay(source);
 			}
+			
 			if (is_key_down('W')){
 				rigid_bodies[1]->applyCentralImpulse(btVector3(0.0f, 0.0f, -1.5f));
+				alSourceStop(source);
+				ALuint source = get_sound_source();
+				alSourcei(source, AL_BUFFER, carFowards);
+				alSourcePlay(source);
 			}
+			
 			else if (is_key_down('A')){
 				rigid_bodies[1]->applyCentralImpulse(btVector3(-1.5f, 0.0f, 0.0f));
 			}
+			else if (is_key_down('Q')){
+				rigid_bodies[1]->applyTorqueImpulse(btVector3(0.0f, 1.5f, 0.0f));
+			}
 			else if (is_key_down('D')){
 				rigid_bodies[1]->applyCentralImpulse(btVector3(1.5f, 0.0f, 0.0f));
+			}
+			else if (is_key_down('E')){
+				rigid_bodies[1]->applyTorqueImpulse(btVector3(0.0f, -1.5f, 0.0f));
 			}
 			else if (is_key_down('S')){
 				rigid_bodies[1]->applyCentralImpulse(btVector3(0.0f, 0.0f, 1.5f));
