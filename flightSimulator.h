@@ -31,7 +31,7 @@ namespace octet {
 
 			aabb aabbMesh = _mesh->get_aabb();													/// the aabb createts a bounding box for the collada mesh
 			vec3 size = aabbMesh.get_half_extent();												/// the vec3 mesure the size of the 
-			/// box is default shape
+																								/// box is default shape
 
 			btCollisionShape *C_shape = new btBoxShape(get_btVector3(size));
 
@@ -142,7 +142,7 @@ namespace octet {
 			mat.rotateY(90);
 			mat.translate(0, -1, 0);
 			material *floor_mat = new material(vec4(1, 0, 1, 1));
-			image *sabImage = new image("assets/myFrogger/base_01.gif");
+			image *sabImage = new image("assets/flightSimAsset/base_01.gif");
 			material *sabMat = new material(sabImage);
 			add_shape(mat, new mesh_box(vec3(600.0f, 0.5f, 400.0f)), sabMat, false);   /// reset this paprameters to go back 
 			/// to the origin150.0f, 0.5f, 100.0
@@ -227,13 +227,13 @@ namespace octet {
 			material *blue = new material(vec4(0, 0, 1, 1));
 
 
-			image *trunkImage = new image("assets/myFrogger/trunk.gif");
+			image *trunkImage = new image("assets/flightSimAsset/trunk.gif");
 			material *trunkMat = new material(trunkImage);
 
-			image *treeImage = new image("assets/myFrogger/tree.gif");
+			image *treeImage = new image("assets/flightSimAsset/tree.gif");
 			material *treeMat = new material(treeImage);
 
-			image *yImage = new image("assets/myFrogger/yellow.gif");
+			image *yImage = new image("assets/flightSimAsset/yellow.gif");
 			material *yMat = new material(yImage);
 
 			//////////////////////////////// flyingCar 
@@ -459,7 +459,7 @@ namespace octet {
 			mat.loadIdentity();
 			mat.rotateY90();
 			mat.translate(0, 100, 0);
-			material *skyDomeMT = new material(new image("assets/myFrogger/skyBox_02.gif"));
+			material *skyDomeMT = new material(new image("assets/flightSimAsset/skyBox_02.gif"));
 			skyDome = new scene_node(mat, atom_);
 			mesh_sphere *skyDomeM = new mesh_sphere(vec3(0), 2000.0f);
 			nodes.push_back(skyDome);
