@@ -151,15 +151,15 @@ namespace octet {
 			//camera_node->rotate(-40.0f, vec3(1, 0, 0));   /// (1, 0, 0)
 
 			//////////////////////////////// Audio
-			carStart = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "assets/flightSimAsset/bang.wav");
+			carStart = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "src/examples/flightSimulator/flightSimAsset/bang.wav");
 			cur_source = 0;
 			alGenSources(1, sources);
 
-			carFowards = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "assets/flightSimAsset/carStart.wav");
+			carFowards = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "src/examples/flightSimulator/flightSimAsset/carStart.wav");
 			cur_source = 0;
 			alGenSources(2, sources);
 
-			carUP = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "assets/flightSimAsset/carUp.wav");
+			carUP = resource_dict::get_sound_handle(AL_FORMAT_MONO16, "src/examples/flightSimulator/flightSimAsset/carUp.wav");
 			cur_source = 0;
 			alGenSources(3, sources);
 
@@ -168,7 +168,7 @@ namespace octet {
 			mat.rotateY(90);
 			mat.translate(0, -1, 0);
 			material *floor_mat = new material(vec4(1, 0, 1, 1));
-			image *sabImage = new image("assets/flightSimAsset/base_01.gif");
+			image *sabImage = new image("src/examples/flightSimulator/flightSimAsset/base_01.gif");
 			material *sabMat = new material(sabImage);
 			add_shape(mat, new mesh_box(vec3(600.0f, 0.5f, 400.0f)), sabMat, false);    /// reset this paprameters to go back 
 																						/// to the origin150.0f, 0.5f, 100.0
@@ -253,19 +253,19 @@ namespace octet {
 			material *blue = new material(vec4(0, 0, 1, 1));
 
 
-			image *trunkImage = new image("assets/flightSimAsset/trunk.gif");
+			image *trunkImage = new image("src/examples/flightSimulator/flightSimAsset/trunk.gif");
 			material *trunkMat = new material(trunkImage);
 
-			image *treeImage = new image("assets/flightSimAsset/tree.gif");
+			image *treeImage = new image("src/examples/flightSimulator/flightSimAsset/tree.gif");
 			material *treeMat = new material(treeImage);
 
-			image *yImage = new image("assets/flightSimAsset/yellow.gif");
+			image *yImage = new image("src/examples/flightSimulator/flightSimAsset/yellow.gif");
 			material *yMat = new material(yImage);
 
-			image *carImage = new image("assets/flightSimAsset/carTxt.gif");
+			image *carImage = new image("src/examples/flightSimulator/flightSimAsset/carTxt.gif");
 			material *carMat = new material(carImage);
 
-			image *roadSiImage = new image("assets/flightSimAsset/roadSign.gif");
+			image *roadSiImage = new image("src/examples/flightSimulator/flightSimAsset/roadSign.gif");
 			material *roadSiMat = new material(roadSiImage);
 
 			//////////////////////////////// flyingCar 
@@ -489,7 +489,7 @@ namespace octet {
 			mat.loadIdentity();
 			mat.rotateY90();
 			mat.translate(0, 100, 0);
-			material *skyDomeMT = new material(new image("assets/flightSimAsset/skyBox_02.gif"));
+			material *skyDomeMT = new material(new image("src/examples/flightSimulator/flightSimAsset/skyBox_02.gif"));
 			skyDome = new scene_node(mat, atom_);
 			mesh_sphere *skyDomeM = new mesh_sphere(vec3(0), 2000.0f);
 			nodes.push_back(skyDome);
